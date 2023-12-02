@@ -73,9 +73,9 @@ mediaDevices
     .catch(alert);
 
 
-let fruits;
-let objects;
-let timeLeft;
+let fruits = [];
+let gameObjects = [];
+let timeLeft = 0;
 
 function isOutOfBounds(object) {
     return object.y <= gridHeight;

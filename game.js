@@ -20,16 +20,15 @@ const maxXSpeed = 0.5;
 const minYSpeed = 1;
 const maxYSpeed = 1.5;
 
-const fruitSize = 60;
-const fruitCenter = fruitSize / 2;
+const minFruitSize = 30;
+const maxFruitSize = 100;
+
 const sensitivity = 255 * 0.9;        // values lower than this count as a slice
 
 const imageTypes = ["baklazan", "mrkva", "paradajka", "tekvica", "uhorka"];
 const images = {};
 
 var radius = 0;
-
-
 
 let previousTimestamp;        // delta calculation
 
@@ -52,8 +51,8 @@ const diffy = Diffy.create({
     resolution: { x: resolutionX, y: resolutionY },
     sensitivity: 0.25,
     threshold: 80,
-    debug: true,
-    containerClassName: 'diffy-demo',
+    //debug: true,
+    //containerClassName: 'diffy-demo',
     sourceDimensions: { w: 130, h: 100 },
     onFrame: /*function (matrix) {}*/ collisionCheck
   });
@@ -84,7 +83,7 @@ function isOutOfBounds(object) {
 
 function init() {
     fruits = [];
-    objects = [];
+    gameObjects = [];
     timeLeft = 120;
     ctx.fillStyle = "red";
 
@@ -138,11 +137,19 @@ function update(timeStamp) {
         return isOutOfBounds(fruit);
     });
 
+    gameObjects = gameObjects.filter(function (fruit) {
+        return isOutOfBounds(fruit);
+    });
+
     ctx.clearRect(0,0,gridWidth,gridHeight);
     for (fruit of fruits) {
         fruit.update(delta);
-        const img = fruit.image
-        ctx.drawImage(images[fruit.image][0], fruit.x, fruit.y, fruitSize, fruitSize);
+        ctx.drawImage(images[fruit.image][0], fruit.x, fruit.y, fruit.size, fruit.size);
+    }
+
+    for (o of gameObjects) {
+        o.update(delta);
+        ctx.drawImage(images[o.image][o.imageIndex], o.x, o.y, o.size, o.size);
     }
 
     requestAnimationFrame(update);
@@ -166,6 +173,22 @@ function destroyFruit(index) {
     const fruit = fruits[index];
     score += fruit.score;
     document.getElementById("score-display").innerText = score;
+    gameObjects.unshift(new PhysicsObject(
+        fruit.x , fruit.y, 
+        fruit.xSpeed + rng(-0.5, 0.5) , fruit.ySpeed + rng(-0.2, 0.2), GRAVITY, fruit.image, fruit.size, fruit.sizeChange, 1
+    ));
+    gameObjects.unshift(new PhysicsObject(
+        fruit.x , fruit.y, 
+        fruit.xSpeed + rng(-0.5, 0.5) , fruit.ySpeed + rng(-0.2, 0.2), GRAVITY, fruit.image, fruit.size, fruit.sizeChange, 2
+    ));
+
+    for (let i = 0; i < 10; i++) {
+        gameObjects.unshift(new PhysicsObject(
+            fruit.x , fruit.y, 
+            fruit.xSpeed + rng(-1.0, 1.0) , fruit.ySpeed + rng(-0.5, 0.5), GRAVITY, fruit.image, rng(10, 20), rng(-0.5, 0.5), 3
+        ));
+    }
+    
     fruits.splice(index, 1);
 }
 
@@ -174,7 +197,9 @@ function spawnFruit() {
     for (let i = 0; i < amount; i++) {
         fruits.unshift(new Fruit(
             rng(gridWidth*0.25, gridWidth*0.75) , gridHeight - 1, 
-            rng(-maxXSpeed, maxXSpeed) , -rng(minYSpeed, maxYSpeed), GRAVITY, Math.floor(Math.random()*imageTypes.length), 10
+            rng(-maxXSpeed, maxXSpeed) , -rng(minYSpeed, maxYSpeed), GRAVITY, 
+            Math.floor(Math.random()*imageTypes.length), rng(minFruitSize, maxFruitSize), rng(-0.2, 1.0),
+            10  // todo: random score?
         ));
     }
 }
@@ -182,7 +207,7 @@ function spawnFruit() {
 function loadImages() {
     for (imageType in imageTypes) {
         images[imageType] = [];
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i <= 3; i++) {
             const img = document.createElement("img");
             img.src = "./images/" + imageTypes[imageType] + i + ".png";
             images[imageType][i] = img;

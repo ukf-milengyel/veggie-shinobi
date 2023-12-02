@@ -10,7 +10,7 @@ class PhysicsObject extends GameObject {
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;
         this.gravity = gravity;
-        this.image = image;     // redundant?
+        this.image = image;
     }
 
     update(delta) {

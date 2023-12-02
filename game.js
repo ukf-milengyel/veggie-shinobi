@@ -12,19 +12,24 @@ let cellWidth = gridWidth / resolutionX;
 let cellHeight = gridHeight / resolutionY;
 let PI = Math.PI;
 
+let score = 0;
+
 const TIMESCALE = 1.0;
 const GRAVITY = 0.0025;
-const mX = 1;
-const mXD = mX/2;
-const mY = 1;
-const mYD = mY * 0.75;  
+const maxXSpeed = 0.5;
+const minYSpeed = 1;
+const maxYSpeed = 1.5;
 
 const fruitSize = 60;
+const fruitCenter = fruitSize / 2;
+const sensitivity = 255 * 0.9;        // values lower than this count as a slice
 
 const imageTypes = ["baklazan", "mrkva", "paradajka", "tekvica", "uhorka"];
 const images = {};
 
 var radius = 0;
+
+
 
 let previousTimestamp;        // delta calculation
 
@@ -43,15 +48,14 @@ function drawGrid(matrix) {
   });
 }
 
-
 const diffy = Diffy.create({
     resolution: { x: resolutionX, y: resolutionY },
-    sensitivity: 0.05,
-    threshold: 90,
-    //debug: true,
-    //containerClassName: 'diffy-demo',
+    sensitivity: 0.25,
+    threshold: 80,
+    debug: true,
+    containerClassName: 'diffy-demo',
     sourceDimensions: { w: 130, h: 100 },
-    onFrame: /*function (matrix) {}*/ drawGrid
+    onFrame: /*function (matrix) {}*/ collisionCheck
   });
 
 let video = document.getElementById("vid");
@@ -71,7 +75,7 @@ mediaDevices
 
 
 let fruits;
-let slices;
+let objects;
 let timeLeft;
 
 function isOutOfBounds(object) {
@@ -80,13 +84,45 @@ function isOutOfBounds(object) {
 
 function init() {
     fruits = [];
-    slices = [];
+    objects = [];
     timeLeft = 120;
     ctx.fillStyle = "red";
 
     setInterval(timerTick, 1000);
     setInterval(spawnFruit, 1250);
     requestAnimationFrame(update);
+}
+
+function collisionCheck(matrix) {
+    drawGrid(matrix);
+
+    matrix.forEach(function (row, rowIdx) {
+        row.forEach(function (column, colIdx) {
+            if(column < sensitivity) {
+                for (let i = fruits.length - 1; i >= 0; i--) {
+                    cx = rowIdx * cellWidth
+                    cy = colIdx * cellHeight;
+                    const f = fruits[i];
+                    if(
+                        f.x >= cx && 
+                        f.y >= cy && 
+                        f.x <= cx + cellWidth &&
+                        f.y <= cy + cellHeight
+                    ) {
+                        console.log("Hit! " + i);
+                        destroyFruit(i);
+                    }
+                }
+            }
+          radius = 10;
+          gridCtx.beginPath();
+          //gridCtx.fillStyle = 'rgba(255, 255, 255, '+ (255-column)/255 +')';
+          gridCtx.fillStyle = 'rgba(255, 255, 255, '+ (255-column)/255 +')';
+          gridCtx.arc(rowIdx * cellWidth, colIdx * cellHeight, radius, 0, 2 * PI, false);
+          gridCtx.fill();
+          gridCtx.closePath();
+        });
+      });
 }
 
 function update(timeStamp) {
@@ -113,10 +149,12 @@ function update(timeStamp) {
 }
 
 function timerTick() {
-    timeLeft -= 1;
-    document.getElementById("time-display").innerText = timeLeft;
-    if(timeLeft <= 0) {
-        // Game over
+    if(timeLeft > -1) {
+        timeLeft -= 1;
+        document.getElementById("time-display").innerText = timeLeft;
+    } else {
+        // todo: clear intervals
+        gameOver();
     }
 }
 
@@ -124,12 +162,19 @@ function gameOver() {
 
 }
 
+function destroyFruit(index) {
+    const fruit = fruits[index];
+    score += fruit.score;
+    document.getElementById("score-display").innerText = score;
+    fruits.splice(index, 1);
+}
+
 function spawnFruit() {
-    const amount = Math.ceil(Math.random() * 3);
+    const amount = rng(1, 3);
     for (let i = 0; i < amount; i++) {
         fruits.unshift(new Fruit(
-            gridWidth /4 + (Math.random() * gridWidth /2), gridHeight - 1, 
-            Math.random() * mX - mXD , -(mYD + Math.random() * mY), GRAVITY, Math.floor(Math.random()*imageTypes.length), 10
+            rng(gridWidth*0.25, gridWidth*0.75) , gridHeight - 1, 
+            rng(-maxXSpeed, maxXSpeed) , -rng(minYSpeed, maxYSpeed), GRAVITY, Math.floor(Math.random()*imageTypes.length), 10
         ));
     }
 }
@@ -143,6 +188,10 @@ function loadImages() {
             images[imageType][i] = img;
         }
     }
+}
+
+function rng(min, max) {
+    return Math.random() * (max - min) + min;
 }
 
 loadImages();

@@ -193,7 +193,7 @@ function destroyFruit(index) {
 }
 
 function spawnFruit() {
-    const amount = rng(1, 3);
+    const amount = rng(0, 3);
     for (let i = 0; i < amount; i++) {
         fruits.unshift(new Fruit(
             rng(gridWidth*0.25, gridWidth*0.75) , gridHeight - 1, 

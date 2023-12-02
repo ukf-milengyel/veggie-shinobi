@@ -113,13 +113,6 @@ function collisionCheck(matrix) {
                     }
                 }
             }
-          radius = 10;
-          gridCtx.beginPath();
-          //gridCtx.fillStyle = 'rgba(255, 255, 255, '+ (255-column)/255 +')';
-          gridCtx.fillStyle = 'rgba(255, 255, 255, '+ (255-column)/255 +')';
-          gridCtx.arc(rowIdx * cellWidth, colIdx * cellHeight, radius, 0, 2 * PI, false);
-          gridCtx.fill();
-          gridCtx.closePath();
         });
       });
 }

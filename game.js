@@ -26,6 +26,8 @@ const minFruitSize = 30;
 const maxFruitSize = 100;
 
 const sensitivity = 255 * 0.9;        // values lower than this count as a slice
+//const sensitivity = 254;        // values lower than this count as a slice
+
 
 const imageTypes = ["baklazan", "mrkva", "paradajka", "tekvica", "uhorka"];
 const images = {};
@@ -86,7 +88,7 @@ function isOutOfBounds(object) {
 function init() {
     fruits = [];
     gameObjects = [];
-    timeLeft = 5;
+    timeLeft = 120;
     ctx.fillStyle = "red";
     running = true;
 
@@ -182,10 +184,11 @@ function destroyFruit(index) {
         fruit.xSpeed + rng(-0.5, 0.5) , fruit.ySpeed + rng(-0.2, 0.2), GRAVITY, fruit.image, fruit.size, fruit.sizeChange, 2
     ));
 
+    // spawn gibs
     for (let i = 0; i < 10; i++) {
         gameObjects.unshift(new PhysicsObject(
             fruit.x , fruit.y, 
-            fruit.xSpeed + rng(-1.0, 1.0) , fruit.ySpeed + rng(-0.5, 0.5), GRAVITY, fruit.image, rng(10, 20), rng(-0.5, 0.5), 3
+            fruit.xSpeed + rng(-1.0, 1.0) , fruit.ySpeed + rng(-0.5, 0.5), GRAVITY, fruit.image, rng(10, 20), rng(-0.2, 0.2), 3
         ));
     }
     
@@ -198,7 +201,7 @@ function spawnFruit() {
         fruits.unshift(new Fruit(
             rng(gridWidth*0.25, gridWidth*0.75) , gridHeight - 1, 
             rng(-maxXSpeed, maxXSpeed) , -rng(minYSpeed, maxYSpeed), GRAVITY, 
-            Math.floor(Math.random()*imageTypes.length), rng(minFruitSize, maxFruitSize), rng(-0.2, 1.0),
+            Math.floor(Math.random()*imageTypes.length), rng(minFruitSize, maxFruitSize), rng(-0.1, 0.3),
             10  // todo: random score?
         ));
     }

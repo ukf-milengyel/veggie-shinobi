@@ -14,6 +14,8 @@ let PI = Math.PI;
 
 let score = 0;
 
+let running = false;
+
 const TIMESCALE = 1.0;
 const GRAVITY = 0.0025;
 const maxXSpeed = 0.5;
@@ -84,8 +86,9 @@ function isOutOfBounds(object) {
 function init() {
     fruits = [];
     gameObjects = [];
-    timeLeft = 120;
+    timeLeft = 5;
     ctx.fillStyle = "red";
+    running = true;
 
     setInterval(timerTick, 1000);
     setInterval(spawnFruit, 1250);
@@ -145,21 +148,25 @@ function update(timeStamp) {
         ctx.drawImage(images[o.image][o.imageIndex], o.x, o.y, o.size, o.size);
     }
 
+    if(!running) return;
     requestAnimationFrame(update);
 }
 
 function timerTick() {
-    if(timeLeft > -1) {
+    if(timeLeft > 0) {
         timeLeft -= 1;
         document.getElementById("time-display").innerText = timeLeft;
     } else {
-        // todo: clear intervals
         gameOver();
     }
 }
 
 function gameOver() {
-
+    running = false;
+    fruits = [];
+    gameObjects = [];
+    // todo: clear intervals
+    // todo: display game over screen
 }
 
 function destroyFruit(index) {
@@ -213,4 +220,5 @@ function rng(min, max) {
 }
 
 loadImages();
-setTimeout(init, 1000); // call to start the game
+init();
+//setTimeout(init, 1000); // call to start the game

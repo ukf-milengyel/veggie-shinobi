@@ -240,4 +240,4 @@ function menuTimer(time) {
 }
 menuTimer(7)
 loadImages();
-setTimeout(init, 1000); // call to start the game
+setTimeout(init, 8000); // call to start the game

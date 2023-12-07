@@ -23,6 +23,8 @@ const maxXSpeed = 0.5;
 const minYSpeed = 1;
 const maxYSpeed = 1.5;
 
+const time = 60;
+
 const minFruitSize = 30;
 const maxFruitSize = 100;
 
@@ -90,7 +92,7 @@ function init() {
     document.getElementById('blanket').style.visibility = "hidden";
     fruits = [];
     gameObjects = [];
-    timeLeft = 120; // set to 120
+    timeLeft = time;
     ctx.fillStyle = "red";
     running = true;
 
@@ -254,6 +256,7 @@ function menuTimer(time) {
         if (time < 0) {
             clearInterval(timer);
             countdownText.textContent = "0";
+            init();
         }
     }, 1000);   
 }
@@ -265,4 +268,4 @@ function redirectAndRefresh() {
 
 menuTimer(7)
 loadImages();
-setTimeout(init, 8000); // call to start the game, set to 8000
+setTimeout(init, 1); // call to start the game, set to 8000

@@ -268,4 +268,4 @@ function redirectAndRefresh() {
 
 menuTimer(7)
 loadImages();
-setTimeout(init, 1); // call to start the game, set to 8000
+setTimeout(init, 8000); // call to start the game, set to 8000

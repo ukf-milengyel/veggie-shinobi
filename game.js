@@ -89,7 +89,7 @@ function init() {
     document.getElementById('blanket').style.visibility = "hidden";
     fruits = [];
     gameObjects = [];
-    timeLeft = 120;
+    timeLeft = 1; // set to 120
     ctx.fillStyle = "red";
     running = true;
 
@@ -169,7 +169,9 @@ function gameOver() {
     fruits = [];
     gameObjects = [];
     // todo: clear intervals
-    // todo: display game over screen
+    document.getElementById("game-over-score").innerHTML = "Score: " + score;
+    document.getElementById("main-container").style.visibility="hidden";
+    document.getElementById("game-over").style.visibility="visible";
 }
 
 function destroyFruit(index) {
@@ -235,9 +237,14 @@ function menuTimer(time) {
             clearInterval(timer);
             countdownText.textContent = "0";
         }
-    }, 1000);
-    
+    }, 1000);   
 }
+
+function redirectAndRefresh() {
+    window.location.href = 'index.html';
+    location.reload();
+}
+
 menuTimer(7)
 loadImages();
-setTimeout(init, 8000); // call to start the game
+setTimeout(init, 1); // call to start the game, set to 8000

@@ -171,7 +171,9 @@ function gameOver() {
     fruits = [];
     gameObjects = [];
     // todo: clear intervals
-    // todo: display game over screen
+    document.getElementById("game-over-score").innerHTML = "Score: " + score;
+    document.getElementById("main-container").style.visibility="hidden";
+    document.getElementById("game-over").style.visibility="visible";
 }
 
 function destroyFruit(index) {
@@ -238,10 +240,13 @@ function menuTimer(time) {
             countdownText.textContent = "0";
             init();
         }
-    }, 1000);
-    
+    }, 1000);   
 }
 
+function redirectAndRefresh() {
+    window.location.href = 'index.html';
+    location.reload();
+}
 
+menuTimer(7)
 loadImages();
-menuTimer(1)

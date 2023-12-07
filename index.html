@@ -26,8 +26,10 @@
         #score-display, #time-display {
             padding: 10px 30px;
             position: absolute;
+            text-shadow: 2px 2px 2px black;
             font-size: 50px;
             color: white;
+            
         }
 
         #score-display {
@@ -69,26 +71,39 @@
 
 <body id="body">
 
-    <div id="blanket" class="shadow-lg">
-        <div class="container text-center vertical-center">
+    <div id="blanket" class="font-monospace">
+        <div class="container">
             <div class="row">
-                <div class="col-lg-12">
-                    <h1>Veggie Shinobi</h1>
+                <div class="col-lg-12 mt-5">
+                    <h1 class="fw-bold">Veggie Shinobi</h1>
                 </div>
             </div>
-            <div class="col-lg-12 mt-5">
-                <p>Try to cut as many fruits as possible with your hands within 120 seconds.
-                    You have 3 lives.</p>
-                    <p>If you cut the bomb, you lose one of the lives.</p>
-                    <p>There is a chance that a special type of fruit will occasionally spawn.</p>
-                    <p>If a blue fruit spawns on your screen and you cut it, time will slow down by half.</p>
-                    <p>If you spawn a fruit with a pink color, you will get a score multiplier and your points will be doubled for each cut fruit.</p>
-                    <h3 class="mt-5">Good luck.</h3>
+            <div class="col-lg-12 mt-5 h6 lh-md">
+                <ul>
+                    <li>
+                        Try to cut as many fruits as possible with your hands within 120 seconds.
+                        You have 3 lives.
+                    </li>
+                    <li>
+                        If you cut the bomb, you lose one of the lives.
+                    </li>
+                    <li>
+                        There is a chance that a special type of fruit will occasionally spawn.
+                    </li>
+                    <li>
+                        If a blue fruit spawns on your screen and you cut it, time will slow down by half.
+                    </li>
+                    <li>
+                        If you spawn a fruit with a pink color, you will get a score multiplier and your points will be doubled for each cut fruit.
+                    </li>
+                    
+                </ul>
+                    <h3 class="mt-5 monospace">Good luck.</h3>
             </div>
             <div class="row">
                 <div class="col-lg-12 mt-5">
                     <h1 id="countdown">
-                        7
+                        
                     </h1>
                 </div>
             </div>
@@ -100,8 +115,8 @@
         <video id="vid" class="vid" style="transform: scaleX(-1);" width="800px" height="600px"></video>
         <canvas id="game-container" class="game-container" width="800px" height="600px"></canvas>
         <canvas id="webcam-trail" class="webcam-trail" width="800px" height="600px"></canvas>
-        <div id="time-display">0</div>
-        <div id="score-display">0</div>
+        <div id="time-display" class="font-monospace">0</div>
+        <div id="score-display" class="font-monospace">0</div>
     </div>
     
     <script src="diffy.min.js"></script>

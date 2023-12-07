@@ -22,7 +22,7 @@ const maxXSpeed = 0.5;
 const minYSpeed = 1;
 const maxYSpeed = 1.5;
 
-const time = 120;
+const time = 60;
 
 const minFruitSize = 30;
 const maxFruitSize = 100;

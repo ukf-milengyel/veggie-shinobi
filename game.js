@@ -11,6 +11,7 @@ let resolutionY = 15;
 let cellWidth = gridWidth / resolutionX;
 let cellHeight = gridHeight / resolutionY;
 let PI = Math.PI;
+let lives = 3;
 
 let score = 0;
 
@@ -29,7 +30,7 @@ const sensitivity = 255 * 0.9;        // values lower than this count as a slice
 //const sensitivity = 254;        // values lower than this count as a slice
 
 
-const imageTypes = ["baklazan", "mrkva", "paradajka", "tekvica", "uhorka"];
+const imageTypes = ["baklazan", "mrkva", "paradajka", "tekvica", "uhorka", "banan", "slivka", "bomba"];
 const images = {};
 
 var radius = 0;
@@ -89,7 +90,7 @@ function init() {
     document.getElementById('blanket').style.visibility = "hidden";
     fruits = [];
     gameObjects = [];
-    timeLeft = 1; // set to 120
+    timeLeft = 120; // set to 120
     ctx.fillStyle = "red";
     running = true;
 
@@ -114,7 +115,7 @@ function collisionCheck(matrix) {
                         f.x <= cx + cellWidth &&
                         f.y <= cy + cellHeight
                     ) {
-                        console.log("Hit! " + i);
+                        //console.log("Hit! " + i);
                         destroyFruit(i);
                     }
                 }
@@ -151,6 +152,8 @@ function update(timeStamp) {
         ctx.drawImage(images[o.image][o.imageIndex], o.x, o.y, o.size, o.size);
     }
 
+    checkLives()
+
     if(!running) return;
     requestAnimationFrame(update);
 }
@@ -161,6 +164,17 @@ function timerTick() {
         document.getElementById("time-display").innerText = timeLeft;
     } else {
         gameOver();
+    }
+}
+
+function checkLives() {
+    switch (lives){
+        case 2: document.getElementById("h3").style.visibility = "hidden";
+                break;
+        case 1: document.getElementById("h2").style.visibility = "hidden";
+                break;
+        case 0: gameOver();
+        
     }
 }
 
@@ -177,6 +191,10 @@ function gameOver() {
 function destroyFruit(index) {
     const fruit = fruits[index];
     score += fruit.score;
+    if (fruit.image == 7) {
+        lives--;
+        console.log(lives);
+    }
     document.getElementById("")
     document.getElementById("score-display").classList.add("score-display-anim");
     document.getElementById("score-display").innerText = score;
@@ -247,4 +265,4 @@ function redirectAndRefresh() {
 
 menuTimer(7)
 loadImages();
-setTimeout(init, 1); // call to start the game, set to 8000
+setTimeout(init, 8000); // call to start the game, set to 8000

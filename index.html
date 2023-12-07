@@ -63,6 +63,11 @@
             z-index: 2;
             color: white;
         }
+        
+        #h3, #h2, #h1 {
+            visibility: visible;
+        } 
+
         .vertical-center {
             margin: 0;
             position: absolute;
@@ -131,6 +136,11 @@
         <video id="vid" class="vid" style="transform: scaleX(-1);" width="800px" height="600px"></video>
         <canvas id="game-container" class="game-container" width="800px" height="600px"></canvas>
         <canvas id="webcam-trail" class="webcam-trail" width="800px" height="600px"></canvas>
+        <div class="hearths p-3">
+            <img src="images/srdce.png" id="h1" alt="<3" style="width: 64px;">
+            <img src="images/srdce.png" id="h2" alt="<3" style="width: 64px;">
+            <img src="images/srdce.png" id="h3" alt="<3" style="width: 64px;">  
+        </div>
         <div id="time-display">0</div>
         <div id="score-display">0</div>
     </div>

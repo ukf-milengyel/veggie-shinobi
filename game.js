@@ -191,13 +191,15 @@ function gameOver() {
 }
 
 function destroyFruit(index) {
+    var slice_sfx = new Audio('sounds/slice.mp3');
+    slice_sfx.play();
     const fruit = fruits[index];
     score += fruit.score;
     if (fruit.image == 7) {
         lives--;
-        console.log(lives);
+        var hp_sfx = new Audio('sounds/hp_loss.mp3');
+        hp_sfx.play();
     }
-    document.getElementById("")
     document.getElementById("score-display").classList.add("score-display-anim");
     document.getElementById("score-display").innerText = score;
     gameObjects.unshift(new PhysicsObject(
@@ -262,6 +264,8 @@ function menuTimer(time) {
 }
 
 function redirectAndRefresh() {
+    var click_sfx = new Audio('sounds/click.mp3');
+    click_sfx.play();
     window.location.href = 'index.html';
     location.reload();
 }

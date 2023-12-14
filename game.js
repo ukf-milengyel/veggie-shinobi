@@ -27,10 +27,10 @@ const maxYSpeed = 1.75;
 
 const time = 60;
 
-const minFruitSize = 30;
+const minFruitSize = 60;
 const maxFruitSize = 100;
 
-const sensitivity = 255 * 0.9;        // values lower than this count as a slice
+const sensitivity = 255 * 0.95;        // values lower than this count as a slice
 //const sensitivity = 254;        // values lower than this count as a slice
 
 const imageTypes = ["baklazan", "mrkva", "paradajka", "tekvica", "uhorka", "banan", "slivka", "bomba"];
@@ -43,6 +43,9 @@ let previousTimestamp;        // delta calculation
 
 // intervals
 let fruitSpawnInterval, timerTickInterval;
+
+let doCollisionCheck = true;
+const bombCollisionCheckTimout = 400;
 
 var sliceSound = new Audio('sounds/slice.mp3');
 var bombSound = new Audio('sounds/hp_loss.mp3');
@@ -73,11 +76,11 @@ function drawGrid(matrix) {
 const diffy = Diffy.create({
     resolution: { x: resolutionX, y: resolutionY },
     sensitivity: 0.5,
-    threshold: 90,
+    threshold: 75,
     //debug: true,
     //containerClassName: 'diffy-demo',
     sourceDimensions: { w: 130, h: 100 },
-    onFrame: /*function (matrix) {}*/ collisionCheck
+    onFrame: collisionCheck
   });
 
 let video = document.getElementById("vid");
@@ -120,6 +123,7 @@ function init() {
 
 function collisionCheck(matrix) {
     drawGrid(matrix);
+    if(!doCollisionCheck) return;
 
     matrix.forEach(function (row, rowIdx) {
         row.forEach(function (column, colIdx) {
@@ -134,7 +138,6 @@ function collisionCheck(matrix) {
                         f.x <= cx + cellWidth &&
                         f.y <= cy + cellHeight
                     ) {
-                        //console.log("Hit! " + i);
                         destroyFruit(i);
                     }
                 }
@@ -175,6 +178,10 @@ function update(timeStamp) {
 
     if(!running) return;
     requestAnimationFrame(update);
+}
+
+function spawnBomb() {
+    
 }
 
 function timerTick() {
@@ -220,12 +227,12 @@ function destroyFruit(index) {
     if (fruit.image === bombIndex) {
         lives--;
         bombSound.play();
-        document.getElementById("hurt-overlay").style.animation = "hurt-animation 1s";
+        document.getElementById("hurt-overlay").style.display = "inline";
     }
     // i love javascript =DDD totally not hacky
     setTimeout(() => {
-        document.getElementById("hurt-overlay").style.animation = "";
-    }, 1000)
+        document.getElementById("hurt-overlay").style.display = "none";
+    }, 100)
     document.getElementById("score-display").classList.add("score-display-anim");
     document.getElementById("score-display").innerText = score;
     gameObjects.unshift(new PhysicsObject(
@@ -238,10 +245,10 @@ function destroyFruit(index) {
     ));
 
     // spawn gibs
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 5; i++) {
         gameObjects.unshift(new PhysicsObject(
             fruit.x , fruit.y, 
-            fruit.xSpeed + rng(-1.0, 1.0) , fruit.ySpeed + rng(-0.5, 0.5), GRAVITY, fruit.image, rng(10, 20), rng(-0.05, 0.2), 3
+            fruit.xSpeed + rng(-1.0, 1.0) , fruit.ySpeed + rng(-0.5, 0.5), GRAVITY, fruit.image, rng(10, 20), 0, 3
         ));
     }
     
@@ -261,6 +268,8 @@ function spawnFruit() {
                 bombIndex, rng(minFruitSize, maxFruitSize), rng(0, 0.2),
                 0
             ));
+            doCollisionCheck = false;
+            setTimeout(() => {doCollisionCheck = true;}, bombCollisionCheckTimout);
             return;
         }
     }

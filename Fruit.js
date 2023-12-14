@@ -20,7 +20,7 @@ class PhysicsObject extends GameObject {
         this.x += this.xSpeed * delta;
         this.y += this.ySpeed * delta;
         this.ySpeed += this.gravity * delta;
-        this.size += this.sizeChange * delta;
+        //this.size += this.sizeChange * delta;     // todo: ?????
     }
 }
 

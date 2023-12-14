@@ -55,9 +55,7 @@
             text-align: center;
             width: 100vw;
             height: 100vh;
-            background: #16222A;  
-            background: -webkit-linear-gradient(to right, #3A6073, #16222A);  
-            background: linear-gradient(to right, #3A6073, #16222A); 
+            background: linear-gradient(#000, #333);
             z-index: 2;
             color: white;
         }
@@ -67,9 +65,7 @@
             position: absolute;
             width: 100vw;
             height: 100vh;
-            background: #16222A;  
-            background: -webkit-linear-gradient(to right, #3A6073, #16222A);  
-            background: linear-gradient(to right, #3A6073, #16222A); 
+            background: linear-gradient(#500, #933);
             z-index: 2;
             color: white;
         }
@@ -99,17 +95,18 @@
             font-size: x-large;
         }
 
-        @keyframes hurt-animation {
-            from {background: rgba(200, 0, 0, 1.0);}
-            to {background: rgba(200, 0, 0, 0.0);}
-        }
-
         #hurt-overlay {
+            display: none;
             position: absolute;
             height: 100%;
             width: 100%;
-            background: rgba(200, 0, 0, 0.0);
-        }       
+            background: rgb(200, 0, 0);
+        }
+        
+        .heart-icon {
+            width: 5%;
+        }
+        
     </style>
 </head>
 
@@ -171,9 +168,9 @@
         </div>
         <div class="hearts">
             Lives<br>
-            <img src="images/srdce.png" id="h1" style="width: 64px;">
-            <img src="images/srdce.png" id="h2" style="width: 64px;">
-            <img src="images/srdce.png" id="h3" style="width: 64px;">  
+            <img src="images/srdce.png" class="heart-icon" id="h1">
+            <img src="images/srdce.png" class="heart-icon" id="h2">
+            <img src="images/srdce.png" class="heart-icon" id="h3">
         </div>
         <div id="hurt-overlay"></div>
     </div>

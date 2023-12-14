@@ -83,6 +83,13 @@
             -ms-transform: translateX(-50%);
             transform: translateX(-50%);
         }
+
+        .hearts {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+        }
+
         p {
             font-size: x-large;
         }
@@ -101,14 +108,15 @@
             <div class="col-lg-12 mt-5 h6 lh-md">
                 <ul>
                     <li>
-                        Try to cut as many fruits as possible with your hands within 120 seconds.
+                        Try to cut as many produce as possible with your hands within 120 seconds.
                         You have 3 lives.
                     </li>
                     <li>
                         If you cut the bomb, you lose one of the lives.
                     </li>
                     <li>
-                        There is a chance that a special type of fruit will occasionally spawn.
+                        <h1>TODO:</h1>
+                        There is a chance that a special type of produce will occasionally spawn.
                     </li>
                     <li>
                         If a blue fruit spawns on your screen and you cut it, time will slow down by half.
@@ -123,7 +131,7 @@
             <div class="row">
                 <div class="col-lg-12 mt-5">
                     <h1 id="countdown">
-                        
+                        Allow camera permissions to start...
                     </h1>
                 </div>
             </div>
@@ -154,13 +162,13 @@
         <video id="vid" class="vid" style="transform: scaleX(-1);" width="800px" height="600px"></video>
         <canvas id="game-container" class="game-container" width="800px" height="600px"></canvas>
         <canvas id="webcam-trail" class="webcam-trail" width="800px" height="600px"></canvas>
-        <div class="hearths p-3">
-            <img src="images/srdce.png" id="h1" alt="<3" style="width: 64px;">
-            <img src="images/srdce.png" id="h2" alt="<3" style="width: 64px;">
-            <img src="images/srdce.png" id="h3" alt="<3" style="width: 64px;">  
-        </div>
         <div id="time-display" class="font-monospace">0</div>
         <div id="score-display" class="font-monospace">0</div>
+        <div class="hearts p-3">
+            <img src="images/srdce.png" id="h1" style="width: 64px;">
+            <img src="images/srdce.png" id="h2" style="width: 64px;">
+            <img src="images/srdce.png" id="h3" style="width: 64px;">  
+        </div>
     </div>
     
     <script src="diffy.min.js"></script>

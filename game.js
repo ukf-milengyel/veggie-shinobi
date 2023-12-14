@@ -4,6 +4,8 @@ let gridCtx = gridCanvas.getContext('2d');
 let gameCanvas = document.querySelector('#game-container');
 let ctx = gameCanvas.getContext('2d');
 
+let permissionsCheck = 0;
+
 let gridWidth = 800;
 let gridHeight = 600;
 let resolutionX = 15;
@@ -31,13 +33,24 @@ const maxFruitSize = 100;
 const sensitivity = 255 * 0.9;        // values lower than this count as a slice
 //const sensitivity = 254;        // values lower than this count as a slice
 
-
 const imageTypes = ["baklazan", "mrkva", "paradajka", "tekvica", "uhorka", "banan", "slivka", "bomba"];
+const bombIndex = 7;    // just use oop man :)
 const images = {};
 
 var radius = 0;
 
 let previousTimestamp;        // delta calculation
+
+// intervals
+let fruitSpawnInterval, timerTickInterval;
+
+function checkPerms(increment) {
+    permissionsCheck += increment;
+    if (permissionsCheck >= 1) {
+        // camera permissions are allowed, start countdown
+        menuTimer(1);
+    }
+}
 
 function drawGrid(matrix) {
   gridCtx.clearRect(0,0,gridWidth, gridHeight);
@@ -76,6 +89,7 @@ mediaDevices
         video.addEventListener("loadedmetadata", () => {
             video.play();
         });
+        checkPerms(1);
     })
     .catch(alert);
 
@@ -96,8 +110,8 @@ function init() {
     ctx.fillStyle = "red";
     running = true;
 
-    setInterval(timerTick, 1000);
-    setInterval(spawnFruit, 1250);
+    timerTickInterval = setInterval(timerTick, 1000);
+    fruitSpawnInterval = setInterval(spawnFruit, 1250);
     requestAnimationFrame(update);
 }
 
@@ -181,10 +195,16 @@ function checkLives() {
 }
 
 function gameOver() {
-    running = false;
+    // clear objects
     fruits = [];
     gameObjects = [];
-    // todo: clear intervals
+
+    // clear intervals
+    running = false;
+    clearInterval(fruitSpawnInterval);
+    clearInterval(timerTickInterval);
+
+    // show game over screen
     document.getElementById("game-over-score").innerHTML = "Score: " + score;
     document.getElementById("main-container").style.visibility="hidden";
     document.getElementById("game-over").style.visibility="visible";
@@ -195,7 +215,7 @@ function destroyFruit(index) {
     slice_sfx.play();
     const fruit = fruits[index];
     score += fruit.score;
-    if (fruit.image == 7) {
+    if (fruit.image === bombIndex) {
         lives--;
         var hp_sfx = new Audio('sounds/hp_loss.mp3');
         hp_sfx.play();
@@ -215,7 +235,7 @@ function destroyFruit(index) {
     for (let i = 0; i < 10; i++) {
         gameObjects.unshift(new PhysicsObject(
             fruit.x , fruit.y, 
-            fruit.xSpeed + rng(-1.0, 1.0) , fruit.ySpeed + rng(-0.5, 0.5), GRAVITY, fruit.image, rng(10, 20), rng(-0.2, 0.2), 3
+            fruit.xSpeed + rng(-1.0, 1.0) , fruit.ySpeed + rng(-0.5, 0.5), GRAVITY, fruit.image, rng(10, 20), rng(-0.05, 0.2), 3
         ));
     }
     
@@ -223,12 +243,27 @@ function destroyFruit(index) {
 }
 
 function spawnFruit() {
-    const amount = rng(0, 3);
+    const amount = Math.ceil(rng(0, 3));
+
+    // randomly spawn a bomb if there is only one fruit on the screen
+    if(amount === 1) {
+        //spawn bomb with 75% chance
+        if (Math.random() < 0.75) {
+            fruits.unshift(new Fruit(
+                rng(gridWidth*0.25, gridWidth*0.75) , gridHeight - 1, 
+                rng(-maxXSpeed, maxXSpeed) , -rng(minYSpeed, maxYSpeed), GRAVITY, 
+                bombIndex, rng(minFruitSize, maxFruitSize), rng(0, 0.2),
+                0
+            ));
+            return;
+        }
+    }
+
     for (let i = 0; i < amount; i++) {
         fruits.unshift(new Fruit(
             rng(gridWidth*0.25, gridWidth*0.75) , gridHeight - 1, 
             rng(-maxXSpeed, maxXSpeed) , -rng(minYSpeed, maxYSpeed), GRAVITY, 
-            Math.floor(Math.random()*imageTypes.length), rng(minFruitSize, maxFruitSize), rng(-0.1, 0.3),
+            Math.floor(Math.random()*(imageTypes.length - 1)), rng(minFruitSize, maxFruitSize), rng(0, 0.2),
             10  // todo: random score?
         ));
     }
@@ -270,6 +305,4 @@ function redirectAndRefresh() {
     location.reload();
 }
 
-menuTimer(7)
 loadImages();
-setTimeout(init, 8000); // call to start the game, set to 8000

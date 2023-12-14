@@ -51,7 +51,7 @@ function checkPerms(increment) {
     permissionsCheck += increment;
     if (permissionsCheck >= 1) {
         // camera permissions are allowed, start countdown
-        menuTimer(1);
+        menuTimer(5);
     }
 }
 

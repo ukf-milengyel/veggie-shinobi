@@ -12,15 +12,22 @@
         body {
             background: linear-gradient(#000, #333);
             font-family: 'Salsa', cursive;
+            text-shadow: 2px 2px 2px black;  
             margin: 0; 
             width: 100vh; 
             height: 100vh;
+        }
+
+        #logo {
+            width: 100px;
+            white-space: nowrap;
+            border-radius: 100%;
+            box-shadow: 2px 2px 2px black;
         }
         
         .main-container {
             width: 100%; 
             height: 100%;
-            text-shadow: 2px 2px 2px black;  
             color: white;
         }
     
@@ -106,29 +113,44 @@
         .heart-icon {
             width: 5%;
         }
+
+        .bounce {
+            animation: bounce-animation 2s infinite;
+        }
+
+        @keyframes bounce-animation {
+            0%, 100% {
+                transform: scale(1.1);
+            }
+
+            50% {
+                transform: scale(1.0);
+            }
+        }
         
     </style>
 </head>
 
 <body id="body">
-    <div id="blanket">
-        <div class="container">
+    <div id="blanket" class="d-flex">
+        <div class="container my-auto">
             <div class="row">
-                <div class="col-lg-12 mt-5">
-                    <h1 class="fw-bold">Veggie Shinobi</h1>
+                <div class="bounce d-flex justify-content-center col-lg-12">
+                    <img id="logo" src="images/logo.png">
+                    <h1 class="fw-bold ms-2 my-auto">Veggie Shinobi</h1>
                 </div>
             </div>
-            <div class="col-lg-12 mt-5 h6 lh-md">
-                        Slice as much produce as possible with your hands within the time limit.<br>
+            <div class="col-lg-12 mt-3 h6 lh-md">
+                        Using your hands, slice as much produce as possible within the given time limit.<br>
                         You have 3 lives.<br>
-                        If you cut the bomb, you lose one of the lives.<br>
-                    <h3 class="mt-5">Good luck.</h3>
+                        Slicing a bomb, will cost you a life.<br>
+                    <h3 class="mt-2">Good luck! 🤓</h3>
             </div>
             <div class="row">
-                <div class="col-lg-12 mt-5">
-                    <h1 id="countdown">
+                <div class="col-lg-12 mt-3">
+                    <h4 id="countdown">
                         Allow camera permissions to start...
-                    </h1>
+                    </h4>
                 </div>
             </div>
                 
@@ -139,7 +161,7 @@
         <div class="container text-center vertical-center">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1>Game Over</h1>
+                    <h1 class="bounce">Game Over</h1>
                 </div>
             </div>
             <div class="col-lg-12 mt-5">

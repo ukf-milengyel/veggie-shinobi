@@ -23,7 +23,7 @@ const TIMESCALE = 1.0;
 const GRAVITY = 0.0025;
 const maxXSpeed = 0.5;
 const minYSpeed = 1;
-const maxYSpeed = 1.5;
+const maxYSpeed = 1.75;
 
 const time = 60;
 
@@ -43,6 +43,9 @@ let previousTimestamp;        // delta calculation
 
 // intervals
 let fruitSpawnInterval, timerTickInterval;
+
+var sliceSound = new Audio('sounds/slice.mp3');
+var bombSound = new Audio('sounds/hp_loss.mp3');
 
 function checkPerms(increment) {
     permissionsCheck += increment;
@@ -69,8 +72,8 @@ function drawGrid(matrix) {
 
 const diffy = Diffy.create({
     resolution: { x: resolutionX, y: resolutionY },
-    sensitivity: 0.25,
-    threshold: 80,
+    sensitivity: 0.5,
+    threshold: 90,
     //debug: true,
     //containerClassName: 'diffy-demo',
     sourceDimensions: { w: 130, h: 100 },
@@ -211,15 +214,18 @@ function gameOver() {
 }
 
 function destroyFruit(index) {
-    var slice_sfx = new Audio('sounds/slice.mp3');
-    slice_sfx.play();
     const fruit = fruits[index];
     score += fruit.score;
+    sliceSound.play();
     if (fruit.image === bombIndex) {
         lives--;
-        var hp_sfx = new Audio('sounds/hp_loss.mp3');
-        hp_sfx.play();
+        bombSound.play();
+        document.getElementById("hurt-overlay").style.animation = "hurt-animation 1s";
     }
+    // i love javascript =DDD totally not hacky
+    setTimeout(() => {
+        document.getElementById("hurt-overlay").style.animation = "";
+    }, 1000)
     document.getElementById("score-display").classList.add("score-display-anim");
     document.getElementById("score-display").innerText = score;
     gameObjects.unshift(new PhysicsObject(
@@ -247,8 +253,8 @@ function spawnFruit() {
 
     // randomly spawn a bomb if there is only one fruit on the screen
     if(amount === 1) {
-        //spawn bomb with 75% chance
-        if (Math.random() < 0.75) {
+        //spawn bomb with a chance
+        if (Math.random() < 0.5) {
             fruits.unshift(new Fruit(
                 rng(gridWidth*0.25, gridWidth*0.75) , gridHeight - 1, 
                 rng(-maxXSpeed, maxXSpeed) , -rng(minYSpeed, maxYSpeed), GRAVITY, 
@@ -260,11 +266,12 @@ function spawnFruit() {
     }
 
     for (let i = 0; i < amount; i++) {
+        const fruitType = Math.floor(Math.random()*(imageTypes.length - 1));
         fruits.unshift(new Fruit(
             rng(gridWidth*0.25, gridWidth*0.75) , gridHeight - 1, 
             rng(-maxXSpeed, maxXSpeed) , -rng(minYSpeed, maxYSpeed), GRAVITY, 
-            Math.floor(Math.random()*(imageTypes.length - 1)), rng(minFruitSize, maxFruitSize), rng(0, 0.2),
-            10  // todo: random score?
+            fruitType, rng(minFruitSize, maxFruitSize), rng(0, 0.2),
+            7 * fruitType  // todo: random score?
         ));
     }
 }
@@ -299,8 +306,6 @@ function menuTimer(time) {
 }
 
 function redirectAndRefresh() {
-    var click_sfx = new Audio('sounds/click.mp3');
-    click_sfx.play();
     window.location.href = 'index.html';
     location.reload();
 }

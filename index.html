@@ -97,6 +97,18 @@
         p {
             font-size: x-large;
         }
+
+        @keyframes hurt-animation {
+            from {background: rgba(200, 0, 0, 1.0);}
+            to {background: rgba(200, 0, 0, 0.0);}
+        }
+
+        #hurt-overlay {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            background: rgba(200, 0, 0, 0.0);
+        }       
     </style>
 </head>
 
@@ -179,6 +191,7 @@
             <img src="images/srdce.png" id="h2" style="width: 64px;">
             <img src="images/srdce.png" id="h3" style="width: 64px;">  
         </div>
+        <div id="hurt-overlay"></div>
     </div>
     
     <script src="diffy.min.js"></script>
